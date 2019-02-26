@@ -52,4 +52,4 @@ gradle/
 gradlew
 gradlew.bat
 unused.txt
-/target
+target/
