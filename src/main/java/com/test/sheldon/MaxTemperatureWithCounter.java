@@ -23,7 +23,13 @@ public class MaxTemperatureWithCounter extends Configured implements Tool {
         job.setReducerClass(MaxTemperatureReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
-        return job.waitForCompletion(true) ? 0 : -1;
+        int code = job.waitForCompletion(true) ? 0 : -1;
+        if (0 == code) {
+            System.out.println("User count:");
+            System.out.println("TemperatueEnum.MALFORMED=" + job.getCounters().findCounter(TemperatueEnum.MALFORMED).getValue());
+            System.out.println("TemperatueEnum.MISSING=" + job.getCounters().findCounter(TemperatueEnum.MISSING).getValue());
+        }
+        return code;
     }
 
     public static void main(String[] args) throws Exception {
