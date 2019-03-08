@@ -16,7 +16,7 @@ public class MaxTemperatureMapperWithCounter extends Mapper<LongWritable, Text, 
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         parser.parse(value.toString());
         if (parser.isValid()) {
-            int temperature = parser.getTemperatue();
+            int temperature = parser.getTemperature();
             context.write(new Text(parser.getYear()), new IntWritable(temperature));
         } else if (parser.isMalformed()) {
             System.err.println("Ignoring possibly corrupt input :" + value);

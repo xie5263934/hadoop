@@ -11,21 +11,21 @@ public class Parser {
 
     public void parse(String value) {
         this.value = value;
-        missing = false;
-        malformed = false;
-        valid = false;
+        this.missing = false;
+        this.malformed = false;
+        this.valid = false;
         if (this.value.charAt(87) == '+') {
-            airTemperature = Integer.parseInt(this.value.substring(88, 92));
+            this.airTemperature = Integer.parseInt(this.value.substring(88, 92));
         } else {
-            airTemperature = Integer.parseInt(this.value.substring(87, 92));
+            this.airTemperature = Integer.parseInt(this.value.substring(87, 92));
         }
-        quality = this.value.substring(92, 93);
-        if (airTemperature == MISSING) {
-            missing = true;
-        } else if (airTemperature != MISSING && quality.matches("[01459]")) {
-            valid = true;
+        this.quality = this.value.substring(92, 93);
+        if (this.airTemperature == this.MISSING) {
+            this.missing = true;
+        } else if (this.airTemperature != MISSING && this.quality.matches("[01459]")) {
+            this.valid = true;
         } else {
-            malformed = true;
+            this.malformed = true;
         }
     }
 
@@ -46,18 +46,18 @@ public class Parser {
 
 
     public boolean isValid() {
-        return valid;
+        return this.valid;
     }
 
     public boolean isMissing() {
-        return missing;
+        return this.missing;
     }
 
     public boolean isMalformed() {
-        return malformed;
+        return this.malformed;
     }
 
-    public int getTemperatue() {
-        return airTemperature;
+    public int getTemperature() {
+        return this.airTemperature;
     }
 }
