@@ -15,13 +15,13 @@ public class MaxTemperatureMapperWithCounter extends Mapper<LongWritable, Text, 
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         parser.parse(value.toString());
-        if (parser.isValid()) {
-            int temperature = parser.getTemperature();
+        if (parser.isValidTemperature()) {
+            int temperature = parser.getAirTemperature();
             context.write(new Text(parser.getYear()), new IntWritable(temperature));
-        } else if (parser.isMalformed()) {
+        } else if (parser.isMalformedTemperature()) {
             System.err.println("Ignoring possibly corrupt input :" + value);
             context.getCounter(TemperatueEnum.MALFORMED).increment(1);
-        } else if (parser.isMissing()) {
+        } else if (parser.isMissingTemperature()) {
             context.getCounter(TemperatueEnum.MISSING).increment(1);
         }
         context.getCounter("TemperatureQuality", parser.getQuality()).increment(1);

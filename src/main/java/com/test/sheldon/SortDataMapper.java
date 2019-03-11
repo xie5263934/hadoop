@@ -14,8 +14,8 @@ public class SortDataMapper extends Mapper<LongWritable, Text, IntWritable, Text
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         parser.parse(value.toString());
-        if (parser.isValid()) {
-            context.write(new IntWritable(parser.getTemperature()), value);
+        if (parser.isValidTemperature()) {
+            context.write(new IntWritable(parser.getAirTemperature()), value);
         }
     }
 }

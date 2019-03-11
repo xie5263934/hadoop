@@ -14,8 +14,8 @@ public class MaxTempMapper extends Mapper<LongWritable, Text, IntPair, NullWrita
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         parser.parse(value.toString());
-        if (parser.isValid()) {
-            context.write(new IntPair(Integer.valueOf(parser.getYear()), parser.getTemperature()), NullWritable.get());
+        if (parser.isValidTemperature()) {
+            context.write(new IntPair(Integer.valueOf(parser.getYear()), parser.getAirTemperature()), NullWritable.get());
         }
     }
 }

@@ -1,63 +1,94 @@
 package com.test.util;
 
+import org.apache.hadoop.io.Text;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Parser {
-    private static final int MISSING = 9999;
-    private String value;
-    private boolean missing;
-    private boolean malformed;
-    private boolean valid;
+
+    private static final int MISSING_TEMPERATURE = 9999;
+
+    private static final DateFormat DATE_FORMAT =
+            new SimpleDateFormat("yyyyMMddHHmm");
+
+    private String stationId;
+    private String observationDateString;
+    private String year;
+    private String airTemperatureString;
     private int airTemperature;
+    private boolean airTemperatureMalformed;
     private String quality;
 
-    public void parse(String value) {
-        this.value = value;
-        this.missing = false;
-        this.malformed = false;
-        this.valid = false;
-        if (this.value.charAt(87) == '+') {
-            this.airTemperature = Integer.parseInt(this.value.substring(88, 92));
+    public void parse(String record) {
+        stationId = record.substring(4, 10) + "-" + record.substring(10, 15);
+        observationDateString = record.substring(15, 27);
+        year = record.substring(15, 19);
+        airTemperatureMalformed = false;
+        // Remove leading plus sign as parseInt doesn't like them (pre-Java 7)
+        if (record.charAt(87) == '+') {
+            airTemperatureString = record.substring(88, 92);
+            airTemperature = Integer.parseInt(airTemperatureString);
+        } else if (record.charAt(87) == '-') {
+            airTemperatureString = record.substring(87, 92);
+            airTemperature = Integer.parseInt(airTemperatureString);
         } else {
-            this.airTemperature = Integer.parseInt(this.value.substring(87, 92));
+            airTemperatureMalformed = true;
         }
-        this.quality = this.value.substring(92, 93);
-        if (this.airTemperature == this.MISSING) {
-            this.missing = true;
-        } else if (this.airTemperature != MISSING && this.quality.matches("[01459]")) {
-            this.valid = true;
-        } else {
-            this.malformed = true;
-        }
+        airTemperature = Integer.parseInt(airTemperatureString);
+        quality = record.substring(92, 93);
     }
 
-    public String getQuality() {
-        return this.quality;
+    public void parse(Text record) {
+        parse(record.toString());
+    }
+
+    public boolean isValidTemperature() {
+        return !airTemperatureMalformed && airTemperature != MISSING_TEMPERATURE
+                && quality.matches("[01459]");
+    }
+
+    public boolean isMalformedTemperature() {
+        return airTemperatureMalformed;
+    }
+
+    public boolean isMissingTemperature() {
+        return airTemperature == MISSING_TEMPERATURE;
     }
 
     public String getStationId() {
-        String pre = value.substring(4, 10);
-        String sub = value.substring(10, 15);
-        return pre + "-" + sub;
+        return stationId;
     }
 
+    public Date getObservationDate() {
+        try {
+            System.out.println(observationDateString);
+            return DATE_FORMAT.parse(observationDateString);
+        } catch (ParseException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
 
     public String getYear() {
-        return this.value.substring(15, 19);
+        return year;
     }
 
-
-    public boolean isValid() {
-        return this.valid;
+    public int getYearInt() {
+        return Integer.parseInt(year);
     }
 
-    public boolean isMissing() {
-        return this.missing;
+    public int getAirTemperature() {
+        return airTemperature;
     }
 
-    public boolean isMalformed() {
-        return this.malformed;
+    public String getAirTemperatureString() {
+        return airTemperatureString;
     }
 
-    public int getTemperature() {
-        return this.airTemperature;
+    public String getQuality() {
+        return quality;
     }
+
 }

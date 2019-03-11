@@ -16,6 +16,6 @@ public class KeyComparator extends WritableComparator {
         if (cmp != 0) {
             return cmp;
         }
-        return -IntPair.compare(ip1.getSecond(), ip2.getFirst());
+        return -IntPair.compare(ip1.getSecond(), ip2.getSecond());
     }
 }

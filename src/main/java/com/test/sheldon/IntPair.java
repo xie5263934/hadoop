@@ -14,6 +14,7 @@ public class IntPair implements WritableComparable<IntPair> {
     }
 
     public IntPair(int first, int second) {
+        super();
         this.first = first;
         this.second = second;
     }
@@ -24,7 +25,7 @@ public class IntPair implements WritableComparable<IntPair> {
         if (comFirst != 0) {
             return comFirst;
         } else {
-            return Integer.valueOf(o.second).compareTo(this.second);
+            return Integer.valueOf(this.second).compareTo(o.second);
         }
     }
 
