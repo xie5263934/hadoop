@@ -1,0 +1,9 @@
+{
+"namespace": "com.test.avro",
+"type":"record",
+"name":"StringProject",
+"doc":"A pair of strings.",
+"fields":[
+{"name":"right","type":"string"}
+]
+}

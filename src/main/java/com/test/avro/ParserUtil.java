@@ -21,4 +21,16 @@ public class ParserUtil {
         }
         return schema;
     }
+
+    public static Schema getAvroParquetSchema() {
+        return new Schema.Parser().parse("{\n" +
+                "\"type\":\"record\",\n" +
+                "\"name\":\"lines\",\n" +
+                "\"fields\":[\n" +
+                "{\"name\":\"offset\",\"type\":\"long\"},\n" +
+                "{\"name\":\"line\",\"type\":\"string\"}\n" +
+                "]\n" +
+                "}");
+    }
+
 }
