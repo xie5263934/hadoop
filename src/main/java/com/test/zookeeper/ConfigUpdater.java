@@ -17,16 +17,26 @@ public class ConfigUpdater {
     }
 
     public void run() throws KeeperException, InterruptedException {
-        while(true){
-            String value = random.nextInt(100)+"";
-            store.write(PATH,value);
-            System.out.printf("Set %s to %s\n",PATH,value);
+        while (true) {
+            String value = random.nextInt(100) + "";
+            store.write(PATH, value);
+            System.out.printf("Set %s to %s\n", PATH, value);
             TimeUnit.SECONDS.sleep(random.nextInt(10));
         }
     }
 
-    public static void main(String [] args) throws IOException, KeeperException, InterruptedException {
-        ConfigUpdater configUpdater = new ConfigUpdater("master:2181");
-        configUpdater.run();
+    public static void main(String[] args) throws IOException, InterruptedException, KeeperException {
+        while (true) {
+            try {
+                ConfigUpdater configUpdater = new ConfigUpdater("master:2181");
+                configUpdater.run();
+            } catch (KeeperException.SessionExpiredException e) {
+                ConfigUpdater configUpdater = new ConfigUpdater("master:2181");
+                configUpdater.run();
+            } catch (KeeperException e) {
+                e.printStackTrace();
+                break;
+            }
+        }
     }
 }
